@@ -1,0 +1,10 @@
+      {% for appointment in appointments %}
+        <li class="provider">
+          <div>
+            <img src="/files/{{ appointment.User.avatar }}" alt="">
+            <strong>{{ appointment.User.name }}</strong>
+            <strong>{{ appointment.date | date("HH:mm") }}</strong>
+          </div>
+          {# <a href="/app/appointments/new/{{ provider.id }}">+</a> #}
+        </li>
+      {% endfor %}

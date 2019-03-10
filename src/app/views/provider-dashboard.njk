@@ -1,0 +1,39 @@
+{% extends "_layouts/default.njk" %}
+{% block body %}
+  <div class="content">
+    <strong>Olá, {{ user.name }}</strong>
+    <p>Filtre seus agendamentos do dia por data:</p>
+    <input type="text" class="flatpickr" placeholder="Escolha uma data" />
+
+    <ul class="providers" id="appointmentsList">
+      {# "appointments" is comming from the dashboardcontroller 'index' method #}
+      {% for appointment in appointments %}
+        <li class="provider">
+          <div>
+            <img src="/files/{{ appointment.User.avatar }}" alt="">
+            <strong>{{ appointment.User.name }}</strong>
+            <strong>{{ appointment.date | date("HH:mm") }}</strong>
+          </div>
+          {# <a href="/app/appointments/new/{{ provider.id }}">+</a> #}
+        </li>
+      {% endfor %}
+    </ul>
+
+    <a href="/app/logout" class="logout">Sair</a>
+  </div>
+
+    <script type="text/javascript">
+    flatpickr('.flatpickr', {
+      defaultDate: new Date(),
+      minDate: new Date(),
+      dateFormat: 'd/m/Y',
+      onChange: function (date) {
+        fetch(`/app/dashboard?partial=true&date=${date[0].getTime()}`).then(function (response) {
+          response.text().then(function (html){ // '.text()' converts the returnObj to text
+            document.getElementById('appointmentsList').innerHTML = html
+          })
+        })
+      }
+    })
+  </script>
+{% endblock %}

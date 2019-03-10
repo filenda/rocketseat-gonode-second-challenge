@@ -2,6 +2,7 @@ const express = require('express')
 const session = require('express-session')
 const FileStore = require('session-file-store')(session)
 const nunjucks = require('nunjucks')
+const dateFilter = require('nunjucks-date-filter')
 const flash = require('connect-flash')
 const path = require('path')
 
@@ -35,11 +36,13 @@ class App {
   views () {
     // __dirname is equivalent to the current file's directory
     //  'app' and 'views' are folder to be accessed in the exact order declared here
-    nunjucks.configure(path.resolve(__dirname, 'app', 'views'), {
+    const env = nunjucks.configure(path.resolve(__dirname, 'app', 'views'), {
       watch: this.isDev,
       express: this.express,
       autoescape: true
     })
+
+    env.addFilter('date', dateFilter)
 
     //  tells express to make the 'public' folder and it's files publicly accessable
     this.express.use(express.static(path.resolve(__dirname, 'public')))
